@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mural Mapper</title>
+    <link rel="stylesheet" href="style/main.css" type="text/css">
+  </head>
+  <body>
+    <center>
+    <h2>Mural Art Locations in Baltimore.</h2>
+    <div id="muralmap"></div>
+    <p>Send a tweet to @bmoreart with location and a url to a photo of mural art work.</p>
+    </center>
+  </body>
+  <script src="vendor/couchapp/loader.js"></script>
+  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=your-api-key" type="text/javascript"></script> 
+  <script type="text/javascript" charset="utf-8">
+	$.couch.app(function(app) {
+		
+	    var iconBlue = new GIcon(); 
+	    iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+	    iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+	    iconBlue.iconSize = new GSize(12, 20);
+	    iconBlue.shadowSize = new GSize(22, 20);
+	    iconBlue.iconAnchor = new GPoint(6, 20);
+	    iconBlue.infoWindowAnchor = new GPoint(5, 1);
+	    
+	        if (GBrowserIsCompatible()) {
+	          var map = new GMap2(document.getElementById("muralmap"));
+	          map.addControl(new GSmallMapControl());
+	          map.addControl(new GMapTypeControl());
+	          map.setCenter(new GLatLng(39.2955168, -76.6069793), 13);
+
+	          GDownloadUrl("_list/mapsxml/locations", function(data) {
+	        	  var xml = GXml.parse(data);
+	        	  console.log(xml);
+		            var markers = xml.documentElement.getElementsByTagName("marker");
+		            for (var i = 0; i < markers.length; i++) {
+		              var name = markers[i].getAttribute("name");
+		              var text = markers[i].getAttribute("text");
+		              var thumbnail = markers[i].getAttribute("thumbnail");
+		              var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")), parseFloat(markers[i].getAttribute("lon")));
+		              var marker = createMarker(point, name, text, thumbnail);
+		              map.addOverlay(marker);
+		            }  
+	          });
+	        }
+
+	      function createMarker(point, name, text, thumbnail) {
+	        var marker = new GMarker(point, iconBlue);
+	        var html = "<div><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>@" + name + "<div>";
+	        html += text;
+	        GEvent.addListener(marker, 'click', function() {
+	          marker.openInfoWindowHtml(html);
+	        });
+	        return marker;
+	      }
+	      
+
+	  	
+	});
+  </script>
+  <script src="/_utils/script/json2.js"></script>
+  <script src="/_utils/script/jquery.js"></script>
+  <script src="/_utils/script/jquery.couch.js"></script>
+</html>

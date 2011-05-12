@@ -1,0 +1,23 @@
+/* add styles here */
+
+body {
+  font:1em Helvetica, sans-serif;
+  padding:10px;
+}
+
+#muralmap {
+	width: 70%;
+	height: 550px;
+  	border-style: solid;
+	border-width: 1px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#thumb {
+	float: left;	
+}
+
+#tweet {
+	float: right;	
+}
