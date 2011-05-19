@@ -9,6 +9,11 @@ var twitter = require('twitter');
 var cradle = require('cradle');
 var config = require('./config');
 
+// Last ditch hander for an exception.
+process.on('uncaughtException', function (err) {
+	  sys.puts('An unhandled exception occured: ' + err);
+});
+
 // Create new Twitter object
 var twit = new twitter({
 	consumer_key : config.twitter.consumer_key,
