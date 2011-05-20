@@ -46,6 +46,11 @@ setInterval(function() {
 
 				// Iterate over returned mentions and store in CouchDB.
 				for ( var i = 0; i < data.length; i++) {
+					
+					// Check if tweet fetched matches since_id (Twitter API bug?)
+					if(data[i].id == since_id) {
+						continue;
+					}
 
 					db.save('' + data[i].id, data[i], function(err, res) {
 						if (err) {
