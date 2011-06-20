@@ -6,13 +6,13 @@
   </head>
   <body>
     <center>
-    <h2>Mural Art Locations in Baltimore.</h2>
+    <h2>Public Art Locations</h2>
     <div id="muralmap"></div>
-    <p>Send a tweet to @bmoreart with location and a url to a photo of mural art work.</p>
+    <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of mural art work.</p>
     </center>
   </body>
   <script src="vendor/couchapp/loader.js"></script>
-  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=your-api-key" type="text/javascript"></script> 
+  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAARMJyzJrjhl3iSncF1sAuyxSqD3OvGGgmW9Q3zP03MHH3lJfv6BTQflugcEeTFvX5Zec-oMDR3XP7Iw" type="text/javascript"></script> 
   <script type="text/javascript" charset="utf-8">
 	$.couch.app(function(app) {
 		
@@ -28,7 +28,7 @@
 	          var map = new GMap2(document.getElementById("muralmap"));
 	          map.addControl(new GSmallMapControl());
 	          map.addControl(new GMapTypeControl());
-	          map.setCenter(new GLatLng(39.2955168, -76.6069793), 13);
+	          map.setCenter(new GLatLng(37.77493, -122.41942), 13);
 
 	          GDownloadUrl("_list/mapsxml/locations", function(data) {
 	        	  var xml = GXml.parse(data);
