@@ -63,7 +63,7 @@ setInterval(function() {
 					var img_urls = data[i].text.pull_url();
 console.log("img_url = ");
 console.log(img_urls);
-                    data[i]
+                    data[i].tweet_image = '';
                     if(img_urls.length > 0) {
                         cur_url = img_urls[0];
                         if(cur_url.toLowerCase().indexOf('twitpic') != -1) {

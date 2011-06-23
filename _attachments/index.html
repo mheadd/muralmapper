@@ -37,26 +37,46 @@
 		            for (var i = 0; i < markers.length; i++) {
 		              var name = markers[i].getAttribute("name");
 		              var text = markers[i].getAttribute("text");
+		              var imagepath = markers[i].getAttribute("imagepath");
 		              var thumbnail = markers[i].getAttribute("thumbnail");
 		              var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")), parseFloat(markers[i].getAttribute("lon")));
-		              var marker = createMarker(point, name, text, thumbnail);
+		              var marker = createMarker(point, name, imagepath, text, thumbnail);
 		              map.addOverlay(marker);
 		            }  
 	          });
 	        }
 
-	      function createMarker(point, name, text, thumbnail) {
-	        var marker = new GMarker(point, iconBlue);
-	        var html = "<div><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>@" + name + "<div>";
-	        html += text;
-	        GEvent.addListener(marker, 'click', function() {
-	          marker.openInfoWindowHtml(html);
-	        });
-	        return marker;
-	      }
+            function createMarker(point, name, image, text, thumbnail) {
+                var marker = new GMarker(point, iconBlue);
+                var html = "<div><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>@" + name + "<br /><img width=\"150\" src=\""+image+ "\"/><div>";
+                html += text.parseURL().parseUsername().parseHashtag();
+                GEvent.addListener(marker, 'click', function() {
+                  marker.openInfoWindowHtml(html);
+                });
+                return marker;
+            }
 	      
+          
+          String.prototype.parseURL = function() {
+          	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+          		return url.link(url);
+          	});
+          };
+          
+          String.prototype.parseUsername = function() {
+          	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+          		var username = u.replace("@","")
+          		return u.link("http://twitter.com/"+username);
+          	});
+          };
 
-	  	
+          String.prototype.parseHashtag = function() {
+          	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+          		var tag = t.replace("#","%23")
+          		return t.link("http://search.twitter.com/search?q="+tag);
+          	});
+          };
+
 	});
   </script>
   <script src="/_utils/script/json2.js"></script>
