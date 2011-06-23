@@ -11,7 +11,7 @@ var config = require('./config');
 
 // Last ditch hander for an exception.
 process.on('uncaughtException', function (err) {
-	  sys.puts('An unhandled exception occured: ' + err);
+	  sys.puts('An unhandled exception occurred: ' + err);
 });
 
 // Create new Twitter object
