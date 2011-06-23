@@ -8,13 +8,13 @@
     <center>
     <h2>Public Art Locations</h2>
     <div id="muralmap"></div>
-    <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of mural art work.</p>
+    <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork.</p>
     </center>
   </body>
   <script src="vendor/couchapp/loader.js"></script>
   <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAARMJyzJrjhl3iSncF1sAuyxSqD3OvGGgmW9Q3zP03MHH3lJfv6BTQflugcEeTFvX5Zec-oMDR3XP7Iw" type="text/javascript"></script> 
   <script type="text/javascript" charset="utf-8">
-	$.couch.app(function(app) {
+    $.couch.app(function(app) {
 		
 	    var iconBlue = new GIcon(); 
 	    iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
@@ -48,7 +48,7 @@
 
             function createMarker(point, name, image, text, thumbnail) {
                 var marker = new GMarker(point, iconBlue);
-                var html = "<div><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>@" + name + "<br /><img width=\"150\" src=\""+image+ "\"/><div>";
+                var html = "<div><div style=\"float:left; width:60px; padding-right:5px; font-size:12px; font-style: italic;\"><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a><span>@" + name + "</span></div><div style=\"float:left; width: 200px;\"><img width=\"200\" src=\""+image+ "\"/><div>";
                 html += text.parseURL().parseUsername().parseHashtag();
                 GEvent.addListener(marker, 'click', function() {
                   marker.openInfoWindowHtml(html);
