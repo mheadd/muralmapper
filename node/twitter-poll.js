@@ -32,9 +32,15 @@ var db = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
 
 // From http://www.simonwhatley.co.uk/examples/twitter/prototype/
 String.prototype.pull_url = function() {
-  	return this.match(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
-  		return url;
-  	});
+    if(this.indexOf('yfrog') != -1) {
+		return  'http://'+this.match(/yfrog.com\/[A-Za-z0-9-_]+/g, function(url) {
+			return url;
+		});
+	} else {
+      	return this.match(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+      		return url;
+      	});
+    }
 };
 
 // At a set interval, fetch all mentions
@@ -60,6 +66,7 @@ setInterval(function() {
 					}
 					
 					var cur_url = '';
+					var internal_id;
 					var img_urls = data[i].text.pull_url();
 console.log("img_url = ");
 console.log(img_urls);
@@ -67,11 +74,13 @@ console.log(img_urls);
                     if(img_urls.length > 0) {
                         cur_url = img_urls[0];
                         if(cur_url.toLowerCase().indexOf('twitpic') != -1) {
-                            var internal_id = cur_url.split('/').pop();
-console.log('internal_id = '+internal_id);
+                            internal_id = cur_url.split('/').pop();
                             data[i].tweet_image = 'http://twitpic.com/show/full/'+internal_id;
-                        } else if(cur_url.toLowerCase().indexOf('t.co') != -1) {
-                            
+                        } else if(cur_url.toLowerCase().indexOf('yfrog') != -1) {
+                            //internal_id = cur_url.split('/').pop();
+                            data[i].tweet_image = cur_url+':iphone';
+                        } else if(cur_url.toLowerCase().indexOf('lockerz') != -1) {
+                            data[i].tweet_image = 'http://api.plixi.com/api/tpapi.svc/imagefromurl?url='+cur_url+'&size=mobile';
                         }
                     }
 console.log(data[i]);
