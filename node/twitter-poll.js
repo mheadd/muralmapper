@@ -55,7 +55,12 @@ setInterval(function() {
 			
 			// Use the last document ID to refine twitter API call (if no docs exist, just use an arbitrary low number).
 			var since_id = res.length == 0 ? 10000 : res[0].id;
+//console.log("About to call: "+'/statuses/mentions.json?since_id=' + since_id);
 			twit.get('/statuses/mentions.json?since_id=' + since_id, function(data) {
+                console.log("data: ");
+                console.log(data);
+                
+			    if(data.statusCode == 400) console.log(data.data.error);
 
 				// Iterate over returned mentions and store in CouchDB.
 				for ( var i = 0; i < data.length; i++) {
@@ -72,7 +77,7 @@ console.log("img_url = ");
 console.log(img_urls);
                     data[i].tweet_image = '';
                     if(img_urls.length > 0) {
-                        cur_url = img_urls[0];
+                        cur_url = (typeof(img_urls) == 'string') ? img_urls : img_urls[0];
                         if(cur_url.toLowerCase().indexOf('twitpic') != -1) {
                             internal_id = cur_url.split('/').pop();
                             data[i].tweet_image = 'http://twitpic.com/show/full/'+internal_id;
@@ -81,6 +86,8 @@ console.log(img_urls);
                             data[i].tweet_image = cur_url+':iphone';
                         } else if(cur_url.toLowerCase().indexOf('lockerz') != -1) {
                             data[i].tweet_image = 'http://api.plixi.com/api/tpapi.svc/imagefromurl?url='+cur_url+'&size=mobile';
+                        } else {
+                            data[i].tweet_image = '';
                         }
                     }
 console.log(data[i]);
