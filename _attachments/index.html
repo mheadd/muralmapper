@@ -30,20 +30,20 @@
 	          map.addControl(new GMapTypeControl());
 	          map.setCenter(new GLatLng(37.77493, -122.41942), 13);
 
-	          GDownloadUrl("_list/mapsxml/locations", function(data) {
-	        	  var xml = GXml.parse(data);
-	        	  console.log(xml);
-		            var markers = xml.documentElement.getElementsByTagName("marker");
-		            for (var i = 0; i < markers.length; i++) {
-		              var name = markers[i].getAttribute("name");
-		              var text = markers[i].getAttribute("text");
-		              var imagepath = markers[i].getAttribute("imagepath");
-		              var thumbnail = markers[i].getAttribute("thumbnail");
-		              var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")), parseFloat(markers[i].getAttribute("lon")));
+	          $.getJSON('_list/geojson/locations', function(data) {
+                    var items = [];
+                    //console.log(data);
+
+                    $.each(data.features, function(key, val) {                     
+                      var name = val.properties.name;
+		              var text = val.properties.text;
+		              var imagepath = val.properties.tweet_image;
+		              var thumbnail = val.properties.thumbnail;
+		              var point = new GLatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
 		              var marker = createMarker(point, name, imagepath, text, thumbnail);
 		              map.addOverlay(marker);
-		            }  
-	          });
+                    });
+              });
 	        }
 
             function createMarker(point, name, image, text, thumbnail) {
