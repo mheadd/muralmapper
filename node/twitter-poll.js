@@ -30,6 +30,13 @@ var db = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
 	}
 }).database(config.couchdb.dbname);
 
+// From http://www.simonwhatley.co.uk/examples/twitter/prototype/
+String.prototype.pull_url = function() {
+  	return this.match(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+  		return url;
+  	});
+};
+
 // At a set interval, fetch all mentions
 setInterval(function() {
 
@@ -51,7 +58,23 @@ setInterval(function() {
 					if(data[i].id == since_id) {
 						continue;
 					}
-
+					
+					var cur_url = '';
+					var img_urls = data[i].text.pull_url();
+console.log("img_url = ");
+console.log(img_urls);
+                    data[i]
+                    if(img_urls.length > 0) {
+                        cur_url = img_urls[0];
+                        if(cur_url.toLowerCase().indexOf('twitpic') != -1) {
+                            var internal_id = cur_url.split('/').pop();
+console.log('internal_id = '+internal_id);
+                            data[i].tweet_image = 'http://twitpic.com/show/full/'+internal_id;
+                        } else if(cur_url.toLowerCase().indexOf('t.co') != -1) {
+                            
+                        }
+                    }
+console.log(data[i]);
 					db.save('' + data[i].id, data[i], function(err, res) {
 						if (err) {
 							sys.puts('Could not save document with id ' + data[i].id
