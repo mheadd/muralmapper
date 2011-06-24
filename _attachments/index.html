@@ -48,8 +48,15 @@
 
             function createMarker(point, name, image, text, thumbnail) {
                 var marker = new GMarker(point, iconBlue);
-                var html = "<div><div style=\"float:left; width:60px; padding-right:5px; font-size:12px; font-style: italic;\"><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a><span>@" + name + "</span></div><div style=\"float:left; width: 200px;\"><img width=\"200\" src=\""+image+ "\"/><div>";
-                html += text.parseURL().parseUsername().parseHashtag();
+                var html = "<div class=\"bubble_details\">"+
+                            "<div class=\"bubble_img_container\" >"+
+                              "<img class=\"bubble_img\" src=\""+image+ "\"/>"+
+                            "</div>"+
+                            "<div class=\"bubble_profile\">"+
+                              "<a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>"+
+                              "<span>@" + name + "</span>"+
+                            "</div>";
+                html += "<div class=\"bubble_text\">"+text.parseURL().parseUsername().parseHashtag()+"</div></div>";
                 GEvent.addListener(marker, 'click', function() {
                   marker.openInfoWindowHtml(html);
                 });

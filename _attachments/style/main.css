@@ -21,3 +21,28 @@ body {
 #tweet {
 	float: right;	
 }
+
+.bubble_details {
+    clear: left;
+    width: 300px;
+}
+
+.bubble_details .bubble_img_container {
+}
+.bubble_details .bubble_img {
+    width: 300px;
+    height: 200px;
+}
+
+.bubble_details .bubble_profile {
+    float:left; 
+    width:60px; 
+    padding-right:5px; 
+    font-size:12px; 
+    font-style: italic;
+}
+
+.bubble_details .bubble_text {
+    text-align: left;
+    font-size: 12px;
+}
