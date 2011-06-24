@@ -55,11 +55,11 @@ setInterval(function() {
 			
 			// Use the last document ID to refine twitter API call (if no docs exist, just use an arbitrary low number).
 			var since_id = res.length == 0 ? 10000 : res[0].id;
-//console.log("About to call: "+'/statuses/mentions.json?since_id=' + since_id);
-			twit.get('/statuses/mentions.json?since_id=' + since_id, function(data) {
-                console.log("data: ");
-                console.log(data);
-                
+
+console.log(since_id);			
+			twit.get('/statuses/mentions.json?include_entities=true&since_id=' + since_id, function(data) {
+//console.log(data);
+
 			    if(data.statusCode == 400) console.log(data.data.error);
 
 				// Iterate over returned mentions and store in CouchDB.
@@ -72,22 +72,33 @@ setInterval(function() {
 					
 					var cur_url = '';
 					var internal_id;
-					var img_urls = data[i].text.pull_url();
-console.log("img_url = ");
+					
+					// If there is a media_url, use it; otherwise start guessing 
+					// which 3rd party service they are using.
+					if(data[i].entities && data[i].entities.media) {
+					    data[i].tweet_image = data[i].entities.media[0].media_url;
+					} else {
+                        // If the image url has been shortened by twitter, we need to get the 
+                        // expanded url. 
+					    var img_urls = (data[i].entities && data[i].entities.urls && data[i].entities.urls[0].expanded_url) ?
+					        data[i].entities.urls[0].expanded_url : data[i].text.pull_url();
+					        
 console.log(img_urls);
-                    data[i].tweet_image = '';
-                    if(img_urls.length > 0) {
-                        cur_url = (typeof(img_urls) == 'string') ? img_urls : img_urls[0];
-                        if(cur_url.toLowerCase().indexOf('twitpic') != -1) {
-                            internal_id = cur_url.split('/').pop();
-                            data[i].tweet_image = 'http://twitpic.com/show/full/'+internal_id;
-                        } else if(cur_url.toLowerCase().indexOf('yfrog') != -1) {
-                            //internal_id = cur_url.split('/').pop();
-                            data[i].tweet_image = cur_url+':iphone';
-                        } else if(cur_url.toLowerCase().indexOf('lockerz') != -1) {
-                            data[i].tweet_image = 'http://api.plixi.com/api/tpapi.svc/imagefromurl?url='+cur_url+'&size=mobile';
-                        } else {
-                            data[i].tweet_image = '';
+                        data[i].tweet_image = '';
+                        if(img_urls.length > 0) {
+                            cur_url = (typeof(img_urls) == 'string') ? img_urls : img_urls[0];
+                            if(cur_url.toLowerCase().indexOf('twitpic') != -1) {
+                                internal_id = cur_url.split('/').pop();
+                                data[i].tweet_image = 'http://twitpic.com/show/full/'+internal_id;
+    console.log('twitpic');                            
+                            } else if(cur_url.toLowerCase().indexOf('yfrog') != -1) {
+                                //internal_id = cur_url.split('/').pop();
+                                data[i].tweet_image = cur_url+':iphone';
+    console.log('yfrog');                            
+                            } else if(cur_url.toLowerCase().indexOf('lockerz') != -1) {
+    console.log('lockerz');
+                                data[i].tweet_image = 'http://api.plixi.com/api/tpapi.svc/imagefromurl?url='+cur_url+'&size=mobile';
+                            } 
                         }
                     }
 console.log(data[i]);
