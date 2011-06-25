@@ -1,73 +1,18 @@
 [
   {
-    "from": "",
-    "to": "_show/cors",
-    "method": "OPTIONS"
-  },
-  {
-      "to": "favicon.ico",
-      "from": "favicon.ico"
-  },
-  {
     "to": "style/*",
     "from": "style/*"
   },
   {
-    "to": "map.html",
-    "from": "map"
+    "to":"vendor/*",
+    "from":"vendor/*"
   },
   {
-    "to": "examples.html",
-    "from": "examples"
-  },
-  {
-      "to": "lib/*",
-      "from": "lib/*"
-  },
-  {
-      "to": "script/*",
-      "from": "script/*"
-  },
-  {
-      "to": "images/*",
-      "from": "images/*"
+    "to":"_list/*",
+    "from":"_list/*"
   },
   {
     "to": "index.html",
     "from": ""
-  },
-  {
-    "to": "../../../api/_design/civicapi/_list/datasets/all",
-    "from": "/v1/datasets"
-  },
-  {
-    "to": "../../../:db/_design/geo/_spatiallist/geojson/pointsFull",
-    "from": "/v1/:db"
-  },
-  {
-    "to": "../../../:db/_design/geo/_spatiallist/geojson/pointsFull",
-    "from": "/v1/:db/all",
-    "query": {
-      "bbox": "-180,-90,180,90"
-    }
-  },
-  {
-    "to": "../../../:db/_design/geo/_spatiallist/kml/pointsFull",
-    "from": "/v1/:db/kml",
-    "query": {
-      "bbox": "-180,-90,180,90"
-    }
-  },
-  {
-    "to": "../../../:db/:id",
-    "from": "/v1/:db/:id"
-  },
-  {
-    "to": "../../",
-    "from": "/api"
-  },
-  {
-    "to": "../../*",
-    "from": "api/*"
   }
 ]
