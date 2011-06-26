@@ -5,17 +5,24 @@
         <link rel="stylesheet" href="style/main.css" type="text/css">
     </head>
     <body>
-        <center>
+        <div id="content">
         <h2>Public Art Locations</h2>
-        <div id="muralmap"></div>
         <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork.</p>
-        </center>
+        <div id="muralmap"></div>
+        <p>(Note: Currently only images posted via twicpic, yfrog, &amp; lockerz)</p>
+        </div>
     </body>
+    <script type="text/javascript">
+        var artmapper_key = 'ABQIAAAARMJyzJrjhl3iSncF1sAuyxTHBAerHdRQ-KX7GOfc7ccH1_w28RQXOfqNMYuX1RYD7B5u9pBEkwVe7A';
+        var iriscouch_key = 'ABQIAAAARMJyzJrjhl3iSncF1sAuyxSqD3OvGGgmW9Q3zP03MHH3lJfv6BTQflugcEeTFvX5Zec-oMDR3XP7Iw';
+        var key_to_use = (location.hostname.indexOf('iriscouch') != -1) ? iriscouch_key : artmapper_key;
+    </script>
     <script src="vendor/couchapp/loader.js"></script>
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAARMJyzJrjhl3iSncF1sAuyxSqD3OvGGgmW9Q3zP03MHH3lJfv6BTQflugcEeTFvX5Zec-oMDR3XP7Iw" type="text/javascript"></script> 
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAARMJyzJrjhl3iSncF1sAuyxTHBAerHdRQ-KX7GOfc7ccH1_w28RQXOfqNMYuX1RYD7B5u9pBEkwVe7A" type="text/javascript"></script>
     <script type="text/javascript" charset="utf-8">
         $.couch.app(function(app) {
-		
+		    var map;
+		    var allMarkers = [];
             var iconBlue = new GIcon(); 
             iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
             iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
@@ -25,24 +32,38 @@
             iconBlue.infoWindowAnchor = new GPoint(5, 1);
 	    
 	        if (GBrowserIsCompatible()) {
-                var map = new GMap2(document.getElementById("muralmap"));
+                map = new GMap2(document.getElementById("muralmap"));
                 map.addControl(new GSmallMapControl());
                 map.addControl(new GMapTypeControl());
                 map.setCenter(new GLatLng(37.77493, -122.41942), 13);
-
-                $.getJSON('_list/geojson/locations', function(data) {
+                updateMarkers();
+                setInterval(updateMarkers, 30000);
+	        }
+	        
+	        function updateMarkers() {
+	            $.getJSON('_list/geojson/locations', function(data) {
                     var items = [];
                     //console.log(data);
 
-                    $.each(data.features, function(key, val) {                     
-                        var name = val.properties.name;
-                        var text = val.properties.text;
-                        var imagepath = val.properties.tweet_image;
-                        var thumbnail = val.properties.thumbnail;
-                        var point = new GLatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
-                        var marker = createMarker(point, name, imagepath, text, thumbnail);
-                        map.addOverlay(marker);
+                    $.each(data.features, function(key, val) {
+                        if(allMarkers.indexOf(val.properties.id) == -1) {
+                            var name = val.properties.name;
+                            var text = val.properties.text;
+                            var imagepath = val.properties.tweet_image;
+                            var thumbnail = val.properties.thumbnail;
+                            var point = new GLatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
+                            var marker = createMarker(point, name, imagepath, text, thumbnail);
+                            allMarkers.push(val.properties.id);
+                            items.push(marker);
+                        }
                     });
+                    
+                    setInterval((function (){
+                        var cur_marker = items.pop();
+                        map.addOverlay(cur_marker);
+                        map.panTo(cur_marker.getLatLng());
+                        
+                    }), 2000);
                 });
 	        }
 

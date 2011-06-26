@@ -3,13 +3,33 @@
 body {
   font:1em Helvetica, sans-serif;
   padding:10px;
+  background-color: #000;
+  color: #000;
+}
+
+a {
+    color: #ccc;
+}
+
+p { 
+    color: #efefef;
+}
+
+h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.8em;
+    color: #efefef;
+}
+
+#content {
+    margin: 0 auto;
+    width: ;
 }
 
 #muralmap {
-	width: 70%;
+	width: 90%;
 	height: 550px;
-  	border-style: solid;
-	border-width: 1px;
+  	border: 1px solid #cccccc;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
@@ -45,4 +65,7 @@ body {
 .bubble_details .bubble_text {
     text-align: left;
     font-size: 12px;
+}
+.bubble_details .bubble_text  a {
+    color:#333;
 }
