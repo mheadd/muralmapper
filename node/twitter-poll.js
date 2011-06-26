@@ -43,6 +43,24 @@ String.prototype.pull_url = function() {
     }
 };
 
+// Function to decode flic.kr urls
+// Based on http://www.flickr.com/groups/api/discuss/72157616713786392/
+function base58_decode(num) {
+    var alpha = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+    var decoded = 0;
+    var multi = 1;
+    var digit;
+    
+    while(num.length > 0) {
+        digit =num[num.length - 1];
+        decoded += multi * alpha.indexOf(digit);
+        multi = multi * alpha.length;
+        num = num.slice(0, -1);
+    }
+    
+    return decoded;
+}
+
 // At a set interval, fetch all mentions
 setInterval(function() {
 
@@ -98,7 +116,10 @@ console.log(img_urls);
                             } else if(cur_url.toLowerCase().indexOf('lockerz') != -1) {
     console.log('lockerz');
                                 data[i].tweet_image = 'http://api.plixi.com/api/tpapi.svc/imagefromurl?url='+cur_url+'&size=mobile';
-                            } 
+                            } else if(cur_url.toLowerCase().indexOf('flic.kr') != -1) {
+    console.log('flickr');
+                                data[i].tweet_image = '';
+                            }
                         }
                     }
 console.log(data[i]);
