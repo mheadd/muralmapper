@@ -35,7 +35,9 @@ h2 {
 }
 
 #thumb {
-	float: left;	
+	float: left;
+	width: 48px;
+	height: 48px;	
 }
 
 #tweet {
