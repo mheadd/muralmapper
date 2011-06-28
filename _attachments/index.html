@@ -18,27 +18,32 @@
         var key_to_use = (location.hostname.indexOf('iriscouch') != -1) ? iriscouch_key : artmapper_key;
     </script>
     <script src="vendor/couchapp/loader.js"></script>
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=ABQIAAAARMJyzJrjhl3iSncF1sAuyxSqD3OvGGgmW9Q3zP03MHH3lJfv6BTQflugcEeTFvX5Zec-oMDR3XP7Iw" type="text/javascript"></script>
+    <script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?sensor=false">
+    </script>
     <script type="text/javascript" charset="utf-8">
+        var map;
         $.couch.app(function(app) {
 		    var map;
 		    var allMarkers = [];
-            var iconBlue = new GIcon(); 
-            iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
-            iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
-            iconBlue.iconSize = new GSize(12, 20);
-            iconBlue.shadowSize = new GSize(22, 20);
-            iconBlue.iconAnchor = new GPoint(6, 20);
-            iconBlue.infoWindowAnchor = new GPoint(5, 1);
+		    var markers = [];
+            var iconBlue = new google.maps.MarkerImage(); 
+            iconBlue.url = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+            //iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+            iconBlue.size = new google.maps.Size(12, 20);
+            iconBlue.anchor = new google.maps.Point(6, 20);
+            iconBlue.origin = new google.maps.Point(0, 0);
 	    
-	        if (GBrowserIsCompatible()) {
-                map = new GMap2(document.getElementById("muralmap"));
-                map.addControl(new GSmallMapControl());
-                map.addControl(new GMapTypeControl());
-                map.setCenter(new GLatLng(37.77493, -122.41942), 13);
-                updateMarkers();
-                setInterval(updateMarkers, 30000);
-	        }
+	        var latlng = new google.maps.LatLng(37.77493, -122.41942);
+            var myOptions = {
+                zoom: 13,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+                
+            };
+            
+            map = new google.maps.Map(document.getElementById("muralmap"), myOptions);
+	        updateMarkers();
 	        
 	        function updateMarkers() {
 	            $.getJSON('_list/geojson/locations', function(data) {
@@ -51,24 +56,34 @@
                             var text = val.properties.text;
                             var imagepath = val.properties.tweet_image;
                             var thumbnail = val.properties.thumbnail;
-                            var point = new GLatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
-                            var marker = createMarker(point, name, imagepath, text, thumbnail);
+                            var point = new google.maps.LatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
+                            //var marker = createMarker(point, name, imagepath, text, thumbnail);
                             allMarkers.push(val.properties.id);
-                            items.push(marker);
+                            markers.push(new google.maps.Marker({
+                                position: point,
+                                map: map,
+                                draggable: false,
+                                icon: iconBlue,
+                                animation: google.maps.Animation.DROP
+                            }));
                         }
                     });
-                    
+                    /*
                     setInterval((function (){
                         var cur_marker = items.pop();
-                        map.addOverlay(cur_marker);
-                        map.panTo(cur_marker.getLatLng());
+                        console.log(cur_marker);
+                        //cur_marker.setMap(map);
+                        console.log(cur_marker);
+                        //map.panTo(cur_marker.getPosition());
                         
                     }), 2000);
+                    */
                 });
 	        }
 
             function createMarker(point, name, image, text, thumbnail) {
-                var marker = new GMarker(point, iconBlue);
+
+
                 var html = "<div class=\"bubble_details\">"+
                             "<div class=\"bubble_img_container\" >"+
                               "<img class=\"bubble_img\" src=\""+image+ "\"/>"+
@@ -78,9 +93,20 @@
                               "<span>@" + name + "</span>"+
                             "</div>";
                 html += "<div class=\"bubble_text\">"+text.parseURL().parseUsername().parseHashtag()+"</div></div>";
-                GEvent.addListener(marker, 'click', function() {
-                  marker.openInfoWindowHtml(html);
+                
+                var markerOptions = {
+                    position: point,
+                    icon: iconBlue
+                }
+                var infowindow = new google.maps.InfoWindow({
+                    content: html
                 });
+                var marker = new google.maps.Marker(markerOptions);
+                
+                google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.open(map,marker);
+                });
+                
                 return marker;
             }
 	      
@@ -108,6 +134,7 @@
 	    });
     </script>
     <script src="/_utils/script/json2.js"></script>
-    <script src="/_utils/script/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    
     <script src="/_utils/script/jquery.couch.js"></script>
 </html>
