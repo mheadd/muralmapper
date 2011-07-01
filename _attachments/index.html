@@ -29,7 +29,7 @@
 		    var markers = [];
             var iconBlue = new google.maps.MarkerImage(); 
             iconBlue.url = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
-            //iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+            var iconBlueShadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
             iconBlue.size = new google.maps.Size(12, 20);
             iconBlue.anchor = new google.maps.Point(6, 20);
             iconBlue.origin = new google.maps.Point(0, 0);
@@ -46,38 +46,37 @@
 	        updateMarkers();
 	        
 	        function updateMarkers() {
+	            
 	            $.getJSON('_list/geojson/locations', function(data) {
                     var items = [];
+                    var indx = 0;
                     //console.log(data);
 
                     $.each(data.features, function(key, val) {
+                        var name, text, imagepath, thumbnail, point;
                         if(allMarkers.indexOf(val.properties.id) == -1) {
-                            var name = val.properties.name;
-                            var text = val.properties.text;
-                            var imagepath = val.properties.tweet_image;
-                            var thumbnail = val.properties.thumbnail;
-                            var point = new google.maps.LatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
+                            indx++;
+                            name = val.properties.name;
+                            text = val.properties.text;
+                            imagepath = val.properties.tweet_image;
+                            thumbnail = val.properties.thumbnail;
+                            point = new google.maps.LatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
                             //var marker = createMarker(point, name, imagepath, text, thumbnail);
                             allMarkers.push(val.properties.id);
-                            markers.push(new google.maps.Marker({
-                                position: point,
-                                map: map,
-                                draggable: false,
-                                icon: iconBlue,
-                                animation: google.maps.Animation.DROP
-                            }));
+
+                            setTimeout(function() {
+                                markers.push(new google.maps.Marker({
+                                    position: point,
+                                    map: map,
+                                    draggable: false,
+                                    icon: iconBlue,
+                                    shadow: iconBlueShadow,
+                                    animation: google.maps.Animation.DROP
+                                }));
+                                map.panTo(point);
+                            }, 800 * indx);
                         }
                     });
-                    /*
-                    setInterval((function (){
-                        var cur_marker = items.pop();
-                        console.log(cur_marker);
-                        //cur_marker.setMap(map);
-                        console.log(cur_marker);
-                        //map.panTo(cur_marker.getPosition());
-                        
-                    }), 2000);
-                    */
                 });
 	        }
 
