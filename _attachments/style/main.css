@@ -72,4 +72,4 @@ h2 {
     color:#333;
 }
 
-#demo { cursor: pointer; }
+#demo { cursor: pointer; text-decoration: underline; }
