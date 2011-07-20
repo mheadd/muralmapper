@@ -18,7 +18,7 @@ var couchdb  = {
 };
 
 var timers = {
-		interval : 10000
+		interval : 15000
 };
 
 exports.twitter = twitter;
