@@ -71,3 +71,5 @@ h2 {
 .bubble_details .bubble_text  a {
     color:#333;
 }
+
+#demo { cursor: pointer; }

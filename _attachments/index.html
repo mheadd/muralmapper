@@ -7,7 +7,7 @@
     <body>
         <div id="content">
         <h2>Public Art Locations</h2>
-        <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork.</p>
+        <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork. <span id="demo">Take the tour</span></p>
         <div id="muralmap"></div>
         <p>(Note: Currently only images posted via twicpic, yfrog, &amp; lockerz)</p>
         </div>
@@ -45,15 +45,17 @@
             map = new google.maps.Map(document.getElementById("muralmap"), myOptions);
 	        updateMarkers();
 	        
-	        function updateMarkers() {
-	            
+	        $('#demo').bind('click', function() { updateMarkers(true); });
+	        
+	        function updateMarkers(demo) {
+	            demo = demo || false;
 	            $.getJSON('_list/geojson/locations', function(data) {
                     var items = [];
                     var indx = 0;
                     //console.log(data);
 
                     $.each(data.features, function(key, val) {
-                        var name, text, imagepath, thumbnail, point;
+                        var name, text, imagepath, thumbnail, point, marker;
                         if(allMarkers.indexOf(val.properties.id) == -1) {
                             indx++;
                             name = val.properties.name;
@@ -61,20 +63,19 @@
                             imagepath = val.properties.tweet_image;
                             thumbnail = val.properties.thumbnail;
                             point = new google.maps.LatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
-                            //var marker = createMarker(point, name, imagepath, text, thumbnail);
+                            marker = createMarker(point, name, imagepath, text, thumbnail);
+                            
                             allMarkers.push(val.properties.id);
-
-                            setTimeout(function() {
-                                markers.push(new google.maps.Marker({
-                                    position: point,
-                                    map: map,
-                                    draggable: false,
-                                    icon: iconBlue,
-                                    shadow: iconBlueShadow,
-                                    animation: google.maps.Animation.DROP
-                                }));
-                                map.panTo(point);
-                            }, 800 * indx);
+                            var delta = (demo) ? 500 : 50;
+                            
+                            setTimeout(function() {                                
+                                if(demo) {
+                                    map.panTo(point);
+                                }
+                                markers.push(marker);
+                                marker.setMap(map);
+                            }, delta * indx);
+                            
                         }
                     });
                 });
@@ -95,7 +96,10 @@
                 
                 var markerOptions = {
                     position: point,
-                    icon: iconBlue
+                    draggable: false,
+                    icon: iconBlue,
+                    shadow: iconBlueShadow,
+                    animation: google.maps.Animation.DROP
                 }
                 var infowindow = new google.maps.InfoWindow({
                     content: html
