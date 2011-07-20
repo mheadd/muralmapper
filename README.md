@@ -8,7 +8,7 @@ CouchApps are web applications which can be served directly from [CouchDB](http:
 
 ## Deploying this app
 
-Assuming you just cloned this app from git, and you have changed into the app directory in your terminal, you want to push it to your CouchDB with the CouchApp command line tool, like this:
+Assuming you just cloned this app from git, and you have changed into the app directory in your terminal, you want to push it to your CouchDB with the CouchApp command line tool ([python version](http://couchapp.org/page/installing)), like this:
 
     couchapp push . http://name:password@hostname:5984/mydatabase
 
