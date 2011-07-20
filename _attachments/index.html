@@ -45,7 +45,11 @@
             map = new google.maps.Map(document.getElementById("muralmap"), myOptions);
 	        updateMarkers();
 	        
-	        $('#demo').bind('click', function() { updateMarkers(true); });
+	        $('#demo').click(function() { 
+	            console.log('clicked'); 
+	            clearMarkers();
+	            updateMarkers(true); 
+	        });
 	        
 	        function updateMarkers(demo) {
 	            demo = demo || false;
@@ -111,6 +115,16 @@
                 });
                 
                 return marker;
+            }
+            
+            function clearMarkers() {
+                allMarkers = [];
+                if (markers) {
+                    for (i in markers) {
+                        markers[i].setMap(null);
+                        delete markers[i];
+                    }
+                }
             }
 	      
           
