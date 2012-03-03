@@ -2,3 +2,4 @@
 .couchappconf
 node/node_modules/*
 node/config.js
+npm-debug.log
