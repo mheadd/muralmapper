@@ -1,10 +1,10 @@
 {
-	"env" : {
+  "env" : {
     "public" : {
       "db" : "http://name:pass@mycouch.couchone.com/mydatabase"
     },
     "default" : {
-      "db" : "http://chaserx:rcs12345@localhost:5984/lexpubart"
+      "db" : "http://name:pass@localhost:5984/lexpubart"
     }
   }
 }
