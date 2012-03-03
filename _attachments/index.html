@@ -3,11 +3,12 @@
     <head>
         <title>Mural Mapper</title>
         <link rel="stylesheet" href="style/main.css" type="text/css">
+	<script type="text/javascript" src="config.js"></script>
     </head>
     <body>
         <div id="content">
         <h2>Public Art Locations</h2>
-        <p>Send a geo-located tweet to <a href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork. <span id="demo">Take the tour</span></p>
+        <p>Send a geo-located tweet to <a id="twitter-link" href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork. <span id="demo">Take the tour</span></p>
         <div id="muralmap"></div>
         <p>(Note: Currently only images posted via twicpic, yfrog, &amp; lockerz are displayed.)</p>
         </div>
@@ -18,6 +19,13 @@
     </script>
     <script type="text/javascript" charset="utf-8">
         var map;
+	function update_twitter_link() {
+		console.log("$: ", $)
+		var link = $("#twitter-link")
+		console.log("link: ", link)
+		link.replaceWith("<a href=\"http://twitter.com/" + MapConfig.twitter_id + "\">@" + MapConfig.twitter_id + "</a>")
+	}
+	$(update_twitter_link)
         $.couch.app(function(app) {
 		    var map;
 		    var allMarkers = [];
