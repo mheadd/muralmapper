@@ -3,21 +3,73 @@
 body {
   font:1em Helvetica, sans-serif;
   padding:10px;
+  background-color: #000;
+  color: #000;
+}
+
+a {
+    color: #ccc;
+}
+
+p { 
+    color: #efefef;
+}
+
+h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.8em;
+    color: #efefef;
+}
+
+#content {
+    margin: 0 auto;
+    width: ;
 }
 
 #muralmap {
-	width: 70%;
+	width: 90%;
 	height: 550px;
-  	border-style: solid;
-	border-width: 1px;
+  	border: 1px solid #cccccc;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
 #thumb {
-	float: left;	
+	float: left;
+	width: 48px;
+	height: 48px;	
 }
 
 #tweet {
 	float: right;	
 }
+
+.bubble_details {
+    clear: left;
+    width: 300px;
+}
+
+.bubble_details .bubble_img_container {
+}
+.bubble_details .bubble_img {
+    width: 300px;
+    height: 200px;
+}
+
+.bubble_details .bubble_profile {
+    float:left; 
+    width:60px; 
+    padding-right:5px; 
+    font-size:12px; 
+    font-style: italic;
+}
+
+.bubble_details .bubble_text {
+    text-align: left;
+    font-size: 12px;
+}
+.bubble_details .bubble_text  a {
+    color:#333;
+}
+
+#demo { cursor: pointer; text-decoration: underline; }

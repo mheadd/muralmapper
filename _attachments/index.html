@@ -1,65 +1,160 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Mural Mapper</title>
-    <link rel="stylesheet" href="style/main.css" type="text/css">
-  </head>
-  <body>
-    <center>
-    <h2>Mural Art Locations in Baltimore.</h2>
-    <div id="muralmap"></div>
-    <p>Send a tweet to @bmoreart with location and a url to a photo of mural art work.</p>
-    </center>
-  </body>
-  <script src="vendor/couchapp/loader.js"></script>
-  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=your-api-key" type="text/javascript"></script> 
-  <script type="text/javascript" charset="utf-8">
-	$.couch.app(function(app) {
-		
-	    var iconBlue = new GIcon(); 
-	    iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
-	    iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
-	    iconBlue.iconSize = new GSize(12, 20);
-	    iconBlue.shadowSize = new GSize(22, 20);
-	    iconBlue.iconAnchor = new GPoint(6, 20);
-	    iconBlue.infoWindowAnchor = new GPoint(5, 1);
+    <head>
+        <title>Lexington Public Art Mapper</title>
+        <link rel="stylesheet" href="style/main.css" type="text/css">
+	<script type="text/javascript" src="config.js"></script>
+    </head>
+    <body>
+        <div id="content">
+        <h2>Lexington Public Art Mapper</h2>
+        <p>Send a geo-located tweet to <a id="twitter-link" href="http://twitter.com/PublicArtApp">@PublicArtApp</a> with location and a url to a photo of public artwork. <span id="demo">Take the tour</span></p>
+        <div id="muralmap"></div>
+        <p>(Note: Currently only images posted via twicpic, yfrog, &amp; lockerz are displayed.)</p>
+        </div>
+    </body>
+    <script src="vendor/couchapp/loader.js"></script>
+    <script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCJO7Y3igbon0wH1CsL9UfQSR1EhUqaZZ4&sensor=false">
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        var map;
+	function update_twitter_link() {
+		console.log("$: ", $)
+		var link = $("#twitter-link")
+		console.log("link: ", link)
+		link.replaceWith("<a href=\"http://twitter.com/" + MapConfig.twitter_id + "\">@" + MapConfig.twitter_id + "</a>")
+	}
+	$(update_twitter_link)
+        $.couch.app(function(app) {
+		    var map;
+		    var allMarkers = [];
+		    var markers = [];
+            var iconBlue = new google.maps.MarkerImage(); 
+            iconBlue.url = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+            var iconBlueShadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+            iconBlue.size = new google.maps.Size(12, 20);
+            iconBlue.anchor = new google.maps.Point(6, 20);
+            iconBlue.origin = new google.maps.Point(0, 0);
 	    
-	        if (GBrowserIsCompatible()) {
-	          var map = new GMap2(document.getElementById("muralmap"));
-	          map.addControl(new GSmallMapControl());
-	          map.addControl(new GMapTypeControl());
-	          map.setCenter(new GLatLng(39.2955168, -76.6069793), 13);
+	        var latlng = new google.maps.LatLng(MapConfig.center_x, MapConfig.center_y);
+            var myOptions = {
+                zoom: 13,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+                
+            };
+            
+            map = new google.maps.Map(document.getElementById("muralmap"), myOptions);
+	        updateMarkers();
+	        
+	        $('#demo').click(function() { 
+	            console.log('clicked'); 
+	            clearMarkers();
+	            updateMarkers(true); 
+	        });
+	        
+	        function updateMarkers(demo) {
+	            demo = demo || false;
+	            $.getJSON('_list/geojson/locations', function(data) {
+                    var items = [];
+                    var indx = 0;
+                    //console.log(data);
 
-	          GDownloadUrl("_list/mapsxml/locations", function(data) {
-	        	  var xml = GXml.parse(data);
-	        	  console.log(xml);
-		            var markers = xml.documentElement.getElementsByTagName("marker");
-		            for (var i = 0; i < markers.length; i++) {
-		              var name = markers[i].getAttribute("name");
-		              var text = markers[i].getAttribute("text");
-		              var thumbnail = markers[i].getAttribute("thumbnail");
-		              var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")), parseFloat(markers[i].getAttribute("lon")));
-		              var marker = createMarker(point, name, text, thumbnail);
-		              map.addOverlay(marker);
-		            }  
-	          });
+                    $.each(data.features, function(key, val) {
+                        var name, text, imagepath, thumbnail, point, marker;
+                        if(allMarkers.indexOf(val.properties.id) == -1) {
+                            indx++;
+                            name = val.properties.name;
+                            text = val.properties.text;
+                            imagepath = val.properties.tweet_image;
+                            thumbnail = val.properties.thumbnail;
+                            point = new google.maps.LatLng(parseFloat(val.geometry.coordinates[1]), parseFloat(val.geometry.coordinates[0]));
+                            marker = createMarker(point, name, imagepath, text, thumbnail);
+                            
+                            allMarkers.push(val.properties.id);
+                            var delta = (demo) ? 500 : 50;
+                            
+                            setTimeout(function() {                                
+                                if(demo) {
+                                    map.panTo(point);
+                                }
+                                markers.push(marker);
+                                marker.setMap(map);
+                            }, delta * indx);
+                            
+                        }
+                    });
+                });
 	        }
 
-	      function createMarker(point, name, text, thumbnail) {
-	        var marker = new GMarker(point, iconBlue);
-	        var html = "<div><a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>@" + name + "<div>";
-	        html += text;
-	        GEvent.addListener(marker, 'click', function() {
-	          marker.openInfoWindowHtml(html);
-	        });
-	        return marker;
-	      }
-	      
+            function createMarker(point, name, image, text, thumbnail) {
 
-	  	
-	});
-  </script>
-  <script src="/_utils/script/json2.js"></script>
-  <script src="/_utils/script/jquery.js"></script>
-  <script src="/_utils/script/jquery.couch.js"></script>
+
+                var html = "<div class=\"bubble_details\">"+
+                            "<div class=\"bubble_img_container\" >"+
+                              "<img class=\"bubble_img\" src=\""+image+ "\"/>"+
+                            "</div>"+
+                            "<div class=\"bubble_profile\">"+
+                              "<a href=http://twitter.com/"+ name + " target=\"_blank\"><img id=\"thumb\" src=\"" + thumbnail + "\"/></a>"+
+                              "<span>@" + name + "</span>"+
+                            "</div>";
+                html += "<div class=\"bubble_text\">"+text.parseURL().parseUsername().parseHashtag()+"</div></div>";
+                
+                var markerOptions = {
+                    position: point,
+                    draggable: false,
+                    icon: iconBlue,
+                    shadow: iconBlueShadow,
+                    animation: google.maps.Animation.DROP
+                }
+                var infowindow = new google.maps.InfoWindow({
+                    content: html
+                });
+                var marker = new google.maps.Marker(markerOptions);
+                
+                google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.open(map,marker);
+                });
+                
+                return marker;
+            }
+            
+            function clearMarkers() {
+                allMarkers = [];
+                if (markers) {
+                    for (i in markers) {
+                        markers[i].setMap(null);
+                        delete markers[i];
+                    }
+                }
+            }
+	      
+          
+            String.prototype.parseURL = function() {
+            	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+            		return url.link(url);
+            	});
+            };
+          
+            String.prototype.parseUsername = function() {
+            	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+            		var username = u.replace("@","")
+            		return u.link("http://twitter.com/"+username);
+            	});
+            };
+
+            String.prototype.parseHashtag = function() {
+            	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+            		var tag = t.replace("#","%23")
+            		return t.link("http://search.twitter.com/search?q="+tag);
+            	});
+            };
+
+	    });
+    </script>
+    <script src="/_utils/script/json2.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    
+    <script src="/_utils/script/jquery.couch.js"></script>
 </html>
