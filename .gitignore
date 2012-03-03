@@ -1,3 +1,4 @@
+.couchapprc
 .couchappconf
 node/node_modules/*
 node/config.js
