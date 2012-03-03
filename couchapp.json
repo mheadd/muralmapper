@@ -1,4 +1,4 @@
 {
-    "name": "Mural Mapper",
-    "description": "A CouchDB + Nodejs + Twitter application that crowdsources mural art mapping."
+    "name": "Lexington Plubic Art Mapper",
+    "description": "A CouchDB + Nodejs + Twitter application that crowdsources mural art mapping in Lexington."
 }

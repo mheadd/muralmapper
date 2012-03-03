@@ -1,0 +1,89 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
+info using npm@1.1.4
+info using node@v0.6.12
+verbose config file /Users/chasesouthard/.npmrc
+verbose config file /usr/local/etc/npmrc
+verbose config file /usr/local/lib/node_modules/npm/npmrc
+verbose caching /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/package.json
+verbose loadDefaults artmapper@1.0.0
+verbose readDependencies: using package.json deps
+verbose where, deps [ '/Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node',
+verbose where, deps   [ 'cradle', 'supervisor', 'twitter' ] ]
+verbose from cache /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/package.json
+info preinstall artmapper@1.0.0
+verbose caching /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/node_modules/supervisor/package.json
+verbose caching /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/node_modules/cradle/package.json
+verbose caching /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/node_modules/twitter/package.json
+verbose loadDefaults twitter@v0.1.17
+verbose from cache /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/package.json
+verbose readDependencies: using package.json deps
+verbose from cache /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/node_modules/cradle/package.json
+verbose from cache /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/node_modules/supervisor/package.json
+verbose from cache /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node/node_modules/twitter/package.json
+verbose cache add [ 'supervisor@0.1.2', null ]
+silly cache add: name, spec, args [ undefined, 'supervisor@0.1.2', [ 'supervisor@0.1.2', null ] ]
+verbose parsed url { pathname: 'supervisor@0.1.2',
+verbose parsed url   path: 'supervisor@0.1.2',
+verbose parsed url   href: 'supervisor@0.1.2' }
+silly cache add: name, spec, args [ 'supervisor', '0.1.2', [ 'supervisor', '0.1.2' ] ]
+verbose parsed url { pathname: '0.1.2', path: '0.1.2', href: '0.1.2' }
+verbose addNamed [ 'supervisor', '0.1.2' ]
+verbose addNamed [ '0.1.2', '0.1.2' ]
+verbose already installed in /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node skipping twitter@0.1.17
+verbose already installed in /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node skipping cradle@0.5.5
+verbose raw, before any munging supervisor/0.1.2
+verbose url resolving [ 'https://registry.npmjs.org/', './supervisor/0.1.2' ]
+verbose url resolved https://registry.npmjs.org/supervisor/0.1.2
+verbose etag "C5PNX2TK47ZSN5U98US7MKX90"
+http GET https://registry.npmjs.org/supervisor/0.1.2
+http 304 https://registry.npmjs.org/supervisor/0.1.2
+silly get cb [ 304,
+silly get cb   { server: 'CouchDB/1.1.0 (Erlang OTP/R14B04)',
+silly get cb     etag: '"C5PNX2TK47ZSN5U98US7MKX90"',
+silly get cb     date: 'Sat, 03 Mar 2012 18:56:41 GMT',
+silly get cb     'content-length': '0' } ]
+verbose etag supervisor/0.1.2 from cache
+verbose bin dist [ '0.6-ares1.7.5-DEV-evundefined-openssl0.9.8r-v83.6.6.24-darwin-x64-11.3.0',
+verbose bin dist   { shasum: 'ba184f3dbcdbd96da5a6a3177bad83168512e60c',
+verbose bin dist     tarball: 'http://registry.npmjs.org/supervisor/-/supervisor-0.1.2.tgz' } ]
+verbose caching /Users/chasesouthard/.npm/supervisor/0.1.2/package/package.json
+verbose loadDefaults supervisor@0.1.2
+silly resolved [ { name: 'supervisor',
+silly resolved     version: '0.1.2',
+silly resolved     description: 'A supervisor program for running nodejs programs',
+silly resolved     author: { name: 'Isaac Z. Schlueter', email: 'i@izs.me' },
+silly resolved     contributors: 
+silly resolved      [ { name: 'Brian Ehmann', email: 'behmann@gmail.com' },
+silly resolved        { name: 'David Taylor', email: 'david@zensatellite.com' } ],
+silly resolved     main: 'lib/supervisor.js',
+silly resolved     bin: 
+silly resolved      { 'node-supervisor': 'lib/cli-wrapper.js',
+silly resolved        supervisor: 'lib/cli-wrapper.js' },
+silly resolved     engines: { node: '~0.2.3 || 0.3 || 0.4 || 0.5' },
+silly resolved     _id: 'supervisor@0.1.2',
+silly resolved     dependencies: {},
+silly resolved     devDependencies: {},
+silly resolved     optionalDependencies: {},
+silly resolved     _engineSupported: false,
+silly resolved     _npmVersion: '1.1.4',
+silly resolved     _nodeVersion: 'v0.6.12',
+silly resolved     _defaultsLoaded: true,
+silly resolved     _from: 'supervisor@0.1.2' } ]
+info into /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node supervisor@0.1.2
+info installOne supervisor@0.1.2
+verbose installOne cb supervisor@0.1.2
+ERR! Unsupported
+ERR! Not compatible with your version of node/npm: supervisor@0.1.2
+ERR! Required: {"node":"~0.2.3 || 0.3 || 0.4 || 0.5"}
+ERR! Actual:   {"npm":"1.1.4","node":"0.6.12"}
+ERR! 
+ERR! System Darwin 11.3.0
+ERR! command "node" "/usr/local/bin/npm" "install"
+ERR! cwd /Users/chasesouthard/OutsideProjects/codeacrossamerica/muralmapper/node
+ERR! node -v v0.6.12
+ERR! npm -v 1.1.4
+ERR! code ENOTSUP
+ERR! message Unsupported
+ERR! errno {}
+verbose exit [ 1, true ]
